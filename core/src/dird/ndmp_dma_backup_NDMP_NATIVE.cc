@@ -130,7 +130,7 @@ int NdmpLoadNext(struct ndm_session *sess) {
          goto bail_out;
       }
 
-      slot_number_t slotnumber = LookupStorageMapping(store, slot_type_normal, LOGICAL_TO_PHYSICAL, mr.Slot);
+      slot_number_t slotnumber = LookupStorageMapping(store, slot_type_storage, LOGICAL_TO_PHYSICAL, mr.Slot);
       /*
        * check if LookupStorageMapping was successful
        */
@@ -573,7 +573,7 @@ static inline bool extract_post_backup_stats_ndmp_native(JobControlRecord *jcr,
        * translate Physical to Logical Slot before storing into database
        */
 
-      media->slot_addr = LookupStorageMapping(jcr->res.wstore, slot_type_normal,
+      media->slot_addr = LookupStorageMapping(jcr->res.wstore, slot_type_storage,
                                                   PHYSICAL_TO_LOGICAL, media->slot_addr);
 #if 0
       Jmsg(jcr, M_INFO, 0, _("Physical Slot is %d\n"), media->slot_addr);

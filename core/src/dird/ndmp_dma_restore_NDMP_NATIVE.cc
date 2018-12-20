@@ -350,7 +350,7 @@ static bool DoNdmpNativeRestore(JobControlRecord *jcr)
        */
       Jmsg(jcr, M_INFO, 0, _("Logical slot for volume %s is %d\n"), media->label, media->slot_addr);
 
-      ndmp_slot = LookupStorageMapping(jcr->res.rstore, slot_type_normal, LOGICAL_TO_PHYSICAL, media->slot_addr);
+      ndmp_slot = LookupStorageMapping(jcr->res.rstore, slot_type_storage, LOGICAL_TO_PHYSICAL, media->slot_addr);
       media->slot_addr = ndmp_slot;
 
       Jmsg(jcr, M_INFO, 0, _("Physical(NDMP) slot for volume %s is %d\n"), media->label, media->slot_addr);

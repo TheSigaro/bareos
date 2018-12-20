@@ -109,7 +109,7 @@ typedef enum {
 typedef enum {
    slot_type_unknown,             /**< Unknown slot type */
    slot_type_drive,               /**< Drive slot */
-   slot_type_normal,              /**< Normal slot */
+   slot_type_storage,              /**< Normal slot */
    slot_type_import,              /**< Import/export slot */
    slot_type_picker               /**< Robotics */
 } slot_type;

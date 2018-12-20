@@ -390,7 +390,7 @@ dlist *native_get_vol_list(UaContext *ua, StorageResource *store, bool listall, 
             continue;
          }
 
-         vl->Type = slot_type_normal;
+         vl->Type = slot_type_storage;
          if (strlen(field2) > 0) {
             vl->Content = slot_content_full;
             vl->VolName = bstrdup(field2);
@@ -419,7 +419,7 @@ dlist *native_get_vol_list(UaContext *ua, StorageResource *store, bool listall, 
             continue;
          }
 
-         vl->Type = slot_type_normal;
+         vl->Type = slot_type_storage;
          vl->Content = slot_content_full;
          vl->VolName = bstrdup(field2);
          vl->Index = INDEX_SLOT_OFFSET + vl->Slot;
@@ -436,7 +436,7 @@ dlist *native_get_vol_list(UaContext *ua, StorageResource *store, bool listall, 
             vl->Type = slot_type_drive;
             break;
          case 'S':
-            vl->Type = slot_type_normal;
+            vl->Type = slot_type_storage;
             break;
          case 'I':
             vl->Type = slot_type_import;
@@ -483,7 +483,7 @@ dlist *native_get_vol_list(UaContext *ua, StorageResource *store, bool listall, 
          case 'F':
             vl->Content = slot_content_full;
             switch (vl->Type) {
-            case slot_type_normal:
+            case slot_type_storage:
             case slot_type_import:
                if (field4) {
                   vl->VolName = bstrdup(field4);

@@ -276,7 +276,7 @@ static void NdmpFillStorageMappings(StorageResource *store, struct ndm_session *
          mapping->Type = slot_type_picker;
          break;
       case SMC_ELEM_TYPE_SE:
-         mapping->Type = slot_type_normal;
+         mapping->Type = slot_type_storage;
          break;
       case SMC_ELEM_TYPE_IEE:
          mapping->Type = slot_type_import;
@@ -315,7 +315,7 @@ static void NdmpFillStorageMappings(StorageResource *store, struct ndm_session *
       case slot_type_drive:
          mapping->Slot = drive++;
          break;
-      case slot_type_normal:
+      case slot_type_storage:
       case slot_type_import:
          mapping->Slot = slot++;
          break;
@@ -371,7 +371,7 @@ dlist *ndmp_get_vol_list(UaContext *ua, StorageResource *store, bool listall, bo
             /*
              * Normal slot
              */
-            vl->Type = slot_type_normal;
+            vl->Type = slot_type_storage;
             if (edp->Full) {
                vl->Content = slot_content_full;
                FillVolumeName(vl, edp);
@@ -393,7 +393,7 @@ dlist *ndmp_get_vol_list(UaContext *ua, StorageResource *store, bool listall, bo
             /*
              * Normal slot
              */
-            vl->Type = slot_type_normal;
+            vl->Type = slot_type_storage;
             vl->Index = edp->element_address;
             if (!edp->Full) {
                free(vl);
@@ -422,7 +422,7 @@ dlist *ndmp_get_vol_list(UaContext *ua, StorageResource *store, bool listall, bo
             /*
              * Normal slot
              */
-            vl->Type = slot_type_normal;
+            vl->Type = slot_type_storage;
             vl->Index = edp->element_address;
             if (edp->Full) {
                vl->Content = slot_content_full;
@@ -465,7 +465,7 @@ dlist *ndmp_get_vol_list(UaContext *ua, StorageResource *store, bool listall, bo
                slot_number_t slot_mapping;
 
                vl->Content = slot_content_full;
-               slot_mapping = LookupStorageMapping(store, slot_type_normal, PHYSICAL_TO_LOGICAL, edp->src_se_addr);
+               slot_mapping = LookupStorageMapping(store, slot_type_storage, PHYSICAL_TO_LOGICAL, edp->src_se_addr);
                vl->Loaded = slot_mapping;
                FillVolumeName(vl, edp);
             } else {
@@ -564,7 +564,7 @@ slot_number_t NdmpGetNumSlots(UaContext *ua, StorageResource *store)
     */
    foreach_dlist(mapping, store->rss->storage_mappings) {
       switch (mapping->Type) {
-      case slot_type_normal:
+      case slot_type_storage:
       case slot_type_import:
          slots++;
          break;
@@ -642,7 +642,7 @@ bool NdmpTransferVolume(UaContext *ua, StorageResource *store,
     * As the upper level functions work with logical slot numbers convert them
     * to physical slot numbers for the actual NDMP operation.
     */
-   slot_mapping = LookupStorageMapping(store, slot_type_normal, LOGICAL_TO_PHYSICAL, src_slot);
+   slot_mapping = LookupStorageMapping(store, slot_type_storage, LOGICAL_TO_PHYSICAL, src_slot);
    if (slot_mapping == -1) {
       ua->ErrorMsg("No slot mapping for slot %hd\n", src_slot);
       return retval;
@@ -650,7 +650,7 @@ bool NdmpTransferVolume(UaContext *ua, StorageResource *store,
    ndmp_job.from_addr = slot_mapping;
    ndmp_job.from_addr_given = 1;
 
-   slot_mapping = LookupStorageMapping(store, slot_type_normal, LOGICAL_TO_PHYSICAL, dst_slot);
+   slot_mapping = LookupStorageMapping(store, slot_type_storage, LOGICAL_TO_PHYSICAL, dst_slot);
    if (slot_mapping == -1) {
       ua->ErrorMsg("No slot mapping for slot %hd\n", dst_slot);
       return retval;
@@ -767,7 +767,7 @@ bool NdmpAutochangerVolumeOperation(UaContext *ua, StorageResource *store, const
       /*
        * Map the logical address to a physical one.
        */
-      slot_mapping = LookupStorageMapping(store, slot_type_normal, LOGICAL_TO_PHYSICAL, slot);
+      slot_mapping = LookupStorageMapping(store, slot_type_storage, LOGICAL_TO_PHYSICAL, slot);
       if (slot_mapping == -1) {
          ua->ErrorMsg("No slot mapping for slot %hd\n", slot);
          return retval;
@@ -877,7 +877,7 @@ bool NdmpSendLabelRequest(UaContext *ua, StorageResource *store, MediaDbRecord *
    if (slot > 0) {
       slot_number_t slot_mapping;
 
-      slot_mapping = LookupStorageMapping(store, slot_type_normal, LOGICAL_TO_PHYSICAL, slot);
+      slot_mapping = LookupStorageMapping(store, slot_type_storage, LOGICAL_TO_PHYSICAL, slot);
       if (slot_mapping == -1) {
          ua->ErrorMsg("No slot mapping for slot %hd\n", slot);
          return retval;

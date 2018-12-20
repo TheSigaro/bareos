@@ -1456,12 +1456,12 @@ static void StatusContentApi(UaContext *ua, StorageResource *store)
             break;
          }
          break;
-      case slot_type_normal:
+      case slot_type_storage:
       case slot_type_import:
          switch (vl1->Content) {
          case slot_content_full:
             switch (vl1->Type) {
-            case slot_type_normal:
+            case slot_type_storage:
                ContentSendInfoApi(ua, 'S', vl1->Slot, vl1->VolName);
                break;
             case slot_type_import:
@@ -1479,7 +1479,7 @@ static void StatusContentApi(UaContext *ua, StorageResource *store)
             vl2 = vol_is_loaded_in_drive(store, vol_list, vl1->Slot);
             if (vl2) {
                switch (vl1->Type) {
-               case slot_type_normal:
+               case slot_type_storage:
                   ContentSendInfoApi(ua, 'S', vl1->Slot, vl2->VolName);
                   break;
                case slot_type_import:
@@ -1492,7 +1492,7 @@ static void StatusContentApi(UaContext *ua, StorageResource *store)
             }
 
             switch (vl1->Type) {
-            case slot_type_normal:
+            case slot_type_storage:
                ua->SendMsg(slot_api_slot_empty_format, 'S', vl1->Slot);
                break;
             case slot_type_import:
@@ -1556,12 +1556,12 @@ static void StatusContentJson(UaContext *ua, StorageResource *store)
          }
          ua->send->ObjectEnd();
          break;
-      case slot_type_normal:
+      case slot_type_storage:
       case slot_type_import:
          switch (vl1->Content) {
          case slot_content_full:
             switch (vl1->Type) {
-            case slot_type_normal:
+            case slot_type_storage:
                ContentSendInfoJson(ua, "slot", vl1->Slot, vl1->VolName);
                break;
             case slot_type_import:
@@ -1579,7 +1579,7 @@ static void StatusContentJson(UaContext *ua, StorageResource *store)
             vl2 = vol_is_loaded_in_drive(store, vol_list, vl1->Slot);
             if (vl2) {
                switch (vl1->Type) {
-               case slot_type_normal:
+               case slot_type_storage:
                   ContentSendInfoJson(ua, "slot", vl1->Slot, vl2->VolName);
                   break;
                case slot_type_import:
@@ -1592,7 +1592,7 @@ static void StatusContentJson(UaContext *ua, StorageResource *store)
             }
 
             switch (vl1->Type) {
-            case slot_type_normal:
+            case slot_type_storage:
                ua->send->ObjectStart();
                ua->send->ObjectKeyValue("type", "slot", "%s\n");
                ua->send->ObjectKeyValue("slotnr", vl1->Slot, "%hd\n");
@@ -1687,7 +1687,7 @@ static void StatusSlots(UaContext *ua, StorageResource *store)
           * We are not interested in drive slots.
           */
          continue;
-      case slot_type_normal:
+      case slot_type_storage:
       case slot_type_import:
          if (vl1->Slot > max_slots) {
             ua->WarningMsg(_("Slot %hd greater than max %hd ignored.\n"),
@@ -1704,7 +1704,7 @@ static void StatusSlots(UaContext *ua, StorageResource *store)
 
          switch (vl1->Content) {
          case slot_content_empty:
-            if (vl1->Type == slot_type_normal) {
+            if (vl1->Type == slot_type_storage) {
                /*
                 * See if this empty slot is empty because the volume is loaded
                 * in one of the drives.
