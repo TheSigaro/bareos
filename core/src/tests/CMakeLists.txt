@@ -147,6 +147,7 @@ add_dependencies(check test_connection_setup)
 ####### test_ndmp_address_translate ###############################
 add_executable(test_ndmp_address_translate
   ndmp_address_translate_test.cc
+  ../dird/ndmp_slot2elemaddr.cc
 )
 
 target_link_libraries(test_ndmp_address_translate ${LINK_LIBRARIES})

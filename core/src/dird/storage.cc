@@ -30,7 +30,7 @@
  */
 
 #include "include/bareos.h"
-#include "dird.h"
+#include "dird/dird.h"
 #include "dird/dird_globals.h"
 #include "dird/sd_cmds.h"
 #include "dird/ndmp_dma_storage.h"
@@ -932,97 +932,6 @@ slot_number_t LookupStorageMapping(StorageResource *store, slot_type slot_type,
 }
 
 
-
-struct SmcElementAddressAssignment {
-
-  /* media transport element */
-  unsigned  picker_base_address;
-  unsigned  picker_count;
-
-  /* storage element */
-  unsigned  storage_base_address;
-  unsigned  storage_count;
-
-  /* import/export element */
-  unsigned  import_export_base_address;
-  unsigned  import_export_count;
-
-  /* data transfer element */
-  unsigned  drive_base_address;
-  unsigned  drive_count;
-
-};
-
-
-/**
- * calculate the element address for given slotnumber and slot_type
- */
-slot_number_t GetElementAddressByBareosSlotNumber(SmcElementAddressAssignment *smc_elem_aa , slot_type slot_type, slot_number_t slotnumber)
-{
-
-   if (slot_type == slot_type_storage) {
-      return (slotnumber
-            + smc_elem_aa->storage_base_address
-            - 1); // normal slots count start from 1
-
-   } else if(slot_type == slot_type_import) {
-      return (slotnumber
-            + smc_elem_aa->import_export_base_address
-            - smc_elem_aa->storage_count // i/e slots follow after normal slots
-            - 1); // normal slots count start from 1
-
-   } else if (slot_type == slot_type_picker) {
-      return (slotnumber
-            + smc_elem_aa->picker_base_address
-              );
-
-   } else if (slot_type == slot_type_drive) {
-      return (slotnumber
-            + smc_elem_aa->drive_base_address
-            );
-
-   } else if (slot_type == slot_type_unknown){
-      return -1;
-   } else {
-      return -1;
-   }
-}
-
-/**
- * calculate the slotnumber for element address and slot_type
- */
-slot_number_t GetBareosSlotNumberByElementAddress(SmcElementAddressAssignment *smc_elem_aa, slot_type slot_type, slot_number_t element_addr)
-{
-   if (slot_type == slot_type_storage) {
-      return (element_addr
-            - smc_elem_aa->storage_base_address
-            + 1); // slots count start from 1
-
-
-   } else if(slot_type == slot_type_import) {
-      return (element_addr
-            - smc_elem_aa->import_export_count
-            + smc_elem_aa->storage_count // i/e slots follow after normal slots
-            + 1); // slots count start from 1
-
-   } else if (slot_type == slot_type_drive) {
-      return (element_addr
-            - smc_elem_aa->drive_base_address
-             );
-
-   } else if (slot_type == slot_type_picker) {
-      return (element_addr
-            - smc_elem_aa->picker_base_address
-            );
-
-   } else if (slot_type == slot_type_unknown){
-      return -1;
-
-   } else {
-      return -1;
-   }
-
-}
 
 
 } /* namespace directordaemon */
